@@ -1,0 +1,18 @@
+{
+    "env": {
+        "node": {
+            "presets": [
+                ["@babel/preset-env", {
+                    "targets": {
+                        "node": "current",
+                        "esmodules": true
+                    }
+                }],
+                "@babel/react"
+            ],
+            "sourceMaps": "both",
+            "sourceType": "unambiguous",
+            "sourceFileName": "index.js"
+        }
+    }
+}
