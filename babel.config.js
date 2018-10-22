@@ -8,6 +8,9 @@ module.exports = (api) => {
     ];
     const plugins = [
         "react-hot-loader/babel",
+        ["css-modules-transform", {
+            generateScopedName: "[hash:base64:3][name]__[local]"
+        }],
     ];
 
     envConfig.targets = {
@@ -21,7 +24,7 @@ module.exports = (api) => {
     other.sourceFileName = "index.js";
 
     return {
-        presets, 
+        presets,
         plugins,
         ...other
     }

@@ -5,3 +5,15 @@ body {
 .test {
     border: 1px dotted black;
 }
+
+
+/* BEM */
+.block {
+    font-size: 2em;
+}
+.block__element {
+    font-size: 2em;
+}
+.block__element--modifier {
+    font-size: 2em;
+}

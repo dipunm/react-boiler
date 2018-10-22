@@ -6,7 +6,7 @@
   "scripts": {
     "start": "nodemon --exec BABEL_ENV=node babel-node src/server/index.js --inspect=1234",
     "debug": "nodemon --exec BABEL_ENV=node babel-node src/server/index.js --inspect-brk=1234",
-    "webpack": "webpack-dev-server --env.NODE_ENV=local --hot --inspect=1234"
+    "webpack": "webpack-dev-server --env.NODE_ENV=local --hot"
   },
   "keywords": [],
   "author": "",

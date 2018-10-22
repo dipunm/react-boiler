@@ -20,11 +20,23 @@ module.exports = function (env = {}) {
   };
 
   //excludeNodeModules(config);
+
   configureBabel(config);
   //configureCssModules(config);
-
+  config.module.rules.push({
+    test: /\.css$/, use: ["style-loader", {
+      loader: "css-loader",
+      options: {
+        modules: true,
+        localIdentName: '[hash:base64:3][name]__[local]'
+      }
+    }]
+  });
+  
   if (env.NODE_ENV === 'local') {
     config.mode = 'development';
+    
+    // setupWebpackDevServer(cibfug)
     config.devServer = {
       contentBase: path.join(__dirname, 'dist'),
       port: 9000,
