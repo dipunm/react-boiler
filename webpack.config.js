@@ -1,9 +1,9 @@
 const path = require('path');
 
-const configureCssModules = require('./.build/configureCssModules');
-const excludeNodeModules = require('./.build/excludeNodeModules');
-const setupDevServer = require('./.build/setupDevServer');
-const configureBabel = require('./.build/configureBabel');
+const configureCssModules = require('./.build/webpack/configureCssModules');
+const excludeNodeModules = require('./.build/webpack/excludeNodeModules');
+const setupDevServer = require('./.build/webpack/setupDevServer');
+const transpileJs = require('./.build/webpack/transpileJs');
 
 module.exports = function (env = {}) {
 
@@ -20,8 +20,7 @@ module.exports = function (env = {}) {
 
   // run this if working on a nodejs build.
   // excludeNodeModules(config);
-
-  configureBabel(config);
+  transpileJs(config);
   configureCssModules(config);
   
   if (env.NODE_ENV === 'local') {

@@ -4,7 +4,7 @@ module.exports = function(config) {
     
     /**
     * Transpiles es6 and jsx syntax to plain javascript
-    * using babel.
+    * using babel. see `babel.config.js`
     */
     config.module.rules.push(
         { test: /\.js$/, use: [
