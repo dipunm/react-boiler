@@ -1,10 +1,9 @@
-require('@babel/register');
 const path = require('path');
 
-const enableWebpackDevServerMiddleware = require('./.build/enableWebpackDevServerMiddleware');
-const configureBabel = require('./.build/configureBabel');
+const configureCssModules = require('./.build/configureCssModules');
 const excludeNodeModules = require('./.build/excludeNodeModules');
-const { setupMiddleware } = require('./src/server/express');
+const setupDevServer = require('./.build/setupDevServer');
+const configureBabel = require('./.build/configureBabel');
 
 module.exports = function (env = {}) {
 
@@ -19,29 +18,15 @@ module.exports = function (env = {}) {
     }
   };
 
-  //excludeNodeModules(config);
+  // run this if working on a nodejs build.
+  // excludeNodeModules(config);
 
   configureBabel(config);
-  //configureCssModules(config);
-  config.module.rules.push({
-    test: /\.css$/, use: ["style-loader", {
-      loader: "css-loader",
-      options: {
-        modules: true,
-        localIdentName: '[hash:base64:3][name]__[local]'
-      }
-    }]
-  });
+  configureCssModules(config);
   
   if (env.NODE_ENV === 'local') {
     config.mode = 'development';
-    
-    // setupWebpackDevServer(cibfug)
-    config.devServer = {
-      contentBase: path.join(__dirname, 'dist'),
-      port: 9000,
-      before: setupMiddleware,
-    }
+    setupDevServer(config);
   }
 
   return config;
