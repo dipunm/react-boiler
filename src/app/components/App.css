@@ -1,5 +1,5 @@
 body {
-    background-color: blueviolet;
+    background-color: white;
 }
 
 .test {
@@ -8,12 +8,13 @@ body {
 
 
 /* BEM */
-.block {
+.container {
     font-size: 2em;
 }
-.block__element {
+
+.element {
     font-size: 2em;
 }
-.block__element--modifier {
+.element--modifier {
     font-size: 2em;
 }

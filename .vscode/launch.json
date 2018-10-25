@@ -15,7 +15,7 @@
             ],
             "sourceMaps": true
         },
-        {  
+        {
             "type": "node",
             "request": "launch",
             "name": "Nodemon",
@@ -29,6 +29,22 @@
             "internalConsoleOptions": "neverOpen",
             "sourceMaps": true,
             "cwd": "${workspaceFolder}",
-        }
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Webpack",
+            "args": [
+                "--env.NODE_ENV=local", "--hot"
+            ],
+            "autoAttachChildProcesses": true,
+            "stopOnEntry": true,
+            "program": "${workspaceRoot}/node_modules/.bin/webpack-dev-server",
+            "restart": true,
+            "console": "internalConsole",
+            "internalConsoleOptions": "neverOpen",
+            "sourceMaps": true,
+            "cwd": "${workspaceFolder}",
+        },
     ]
 }

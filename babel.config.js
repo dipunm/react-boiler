@@ -3,7 +3,7 @@ module.exports = (api) => {
     const envConfig = {};
     const other = {};
     const presets = [
-        ["@babel/preset-env", envConfig], 
+        ["@babel/preset-env", envConfig],
         "@babel/react",
     ];
     const plugins = [
@@ -17,11 +17,11 @@ module.exports = (api) => {
         "node": "current",
         "esmodules": true
     };
-    
+
     other.ignore = ['node_modules'];
     other.sourceMaps = "both";
     other.sourceType = "unambiguous";
-    other.sourceFileName = "index.js";
+    // other.sourceFileName = "index.js";
 
     return {
         presets,
