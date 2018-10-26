@@ -4,47 +4,82 @@ import './App.css'
 import styles from './App.css'
 import Oc from './Oc';
 
-
-const userInfoHtml = `<style>@media only screen and (max-width: 64em) and (min-width: 40.0625em){
-    .top-bar-nav-calendar+.top-bar-nav-li .top-bar-nav-username {
-      overflow: hidden;
-      white-space: nowrap;
-      padding: 0 2rem 0 0;
-    }
-  }
-  </style><div id="container-oc-1234"><a href="#" data-target="header-user-menu" id="global_nav_username" class="top-bar-nav-link top-bar-nav-username js-toggle-menu with-arrow">Hello!</a><span class="cover"></span><div id="header-user-menu" class="menu menu-right"><div class="menu-container"><div class="menu-main"><div class="menu-section"><div class="menu-list"><a href="/my/profile/info" id="global_nav_myprofile" class="menu-list-link">My Profile</a><a href="/my/profile/info#reservations-past" target="_blank" class="menu-list-link">My Dining History</a><a href="/my/Favorites" target="_blank" class="menu-list-link">My Saved Restaurants</a><a href="/my/logout" id="no-global_nav_logout" class="menu-list-link">Sign out</a></div></div></div></div></div></div><script>window.oc=window.oc||{};oc.renderedComponents=oc.renderedComponents||{};oc.renderedComponents["user-info"]="1.1.13";</script>`;
-
-
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
     }
 
-    remount() {
+    remount(name) {
         this.setState({
-            hideServerOC: true
+            [name]: true
         });
         setTimeout(() => this.setState({
-            hideServerOC: false
+            [name]: false
         }), 1000);
     }
 
+    toggled(key, component) {
+        return this.state[key] ? false : <React.Fragment>
+            {component}
+            <button onClick={() => this.remount(key)}>Click to re-mount.</button>
+        </React.Fragment>;
+    }
+
+    // https://oc-registry.opentable.com
     render() {
-        const serverOc = this.state.hideServerOC ? false : <Oc
-            name='server' serverHtml={userInfoHtml}
-            url='https://oc-registry.opentable.com/v2/user-info?gpid=1' domainId={1} language='en-GB'
-            mountContainerId='container-oc-1234'
-            onMountCaptured={capturedServerOc => this.setState({capturedServerOc})}
-            capturedDom={this.state.capturedServerOc} />;
+        const loading = <span>LOADING...</span>
+
+
+        const serverOcWithMount = this.toggled('hideServerMount', (
+            <Oc name='server' serverHtml={this.props.dipun0}
+                url='/v2/dipun?gpid=1' domainId={1} language='en-GB' id={0}
+                loading={loading}
+                
+                mountContainerId='oc-app-9h838q-0'
+                onMountCaptured={capturedServerOc => this.setState({capturedServerOc})}
+                capturedDom={this.state.capturedServerOc} 
+            />)
+        );
+        
+        const clientOcWithMount = this.toggled('hideClientMount', (
+            <Oc name='client' 
+                url='/v2/dipun?gpid=1' domainId={1} language='en-GB' id={1}
+                loading={loading}
+                
+                mountContainerId='oc-app-9h838q-1'
+                onMountCaptured={capturedServerOcClient => this.setState({capturedServerOcClient})}
+                capturedDom={this.state.capturedServerOcClient} 
+            />)
+        );
+
+        const serverOc = this.toggled(
+            'hideServerNoMount', 
+            <Oc name='server2' serverHtml={this.props.dipun2} 
+                url='/v2/dipun?gpid=1' domainId={1} language='en-GB' id={2}
+                loading={loading} />
+        );
+
+        const clientOc = this.toggled(
+            'hideClientNoMount', 
+            <Oc name='client2'
+                url='/v2/dipun?gpid=1' domainId={1} language='en-GB' id={3} 
+                loading={loading}/>
+        );
 
         return (
             <div className={styles.test}>
+                <h1>Server rendered (mountable):</h1>
+                {serverOcWithMount}
+                <h1>Client rendered (mountable):</h1>
+                {clientOcWithMount}
+
                 <h1>Server rendered:</h1>
                 {serverOc}
                 <h1>Client rendered:</h1>
-                <Oc name='client' url='https://oc-registry.opentable.com/v2/user-info?gpid=1' domainId={1} language='en-GB' />
-                <button onClick={() => this.remount()}>Click to re-mount server oc</button>
+                {clientOc}
+
+                <Oc url='https://oc-registry.opentable.com/v2/ot-react-maps-oc/5.x.x?centerLat=37.776419&centerLng=-122.270752&zoomLevel=4&domain=com&lang=en-US&anonymousId=TEST&gpid=fhdDk612M4mjT70xkKCZRg%253d%253d&__ot_conservedHeaders=x2YPvT6POzqVVB9%2B77Ms1I9LuuqQ3TC8AUlQB272kTrWZ1xlYgfgEkC0DoA4sE%2BmxN5Evp424LyqS6gu%2FSExh6%2B72fXU4qvBpz6aRsxBu2PiDxj%2Fz1fzwoQGgguJG1EMVS3NYHGoN1izh9JSNeow36fVQKKQaWEVuXTw%2Bd10PfI9ui60rIKalZ9NhPIY6NOS&__oc_Retry=0' />
             </div>
         );
     }

@@ -3,8 +3,12 @@ import { renderToNodeStream } from 'react-dom/server';
 import buildTemplate from '../../app/react-app.template';
 
 import App from '../../app/components/App';
+import dipun from '../../server/dipun.oc';
 
-const getAllData = () => Promise.resolve({});
+const getAllData = () => Promise.resolve({
+    dipun0: dipun(0),
+    dipun2: dipun(2),
+});
 
 async function renderToStream(req) {
     const requestState = req;
@@ -12,7 +16,7 @@ async function renderToStream(req) {
     const reactApp = renderToNodeStream(<App {...data} />)
     const template = buildTemplate({
         reactApp, 
-        model: data.model || {}
+        model: data || {}
     });
     return template;
 }

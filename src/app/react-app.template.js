@@ -1,4 +1,6 @@
 import T from 'stream-template';
+const escape = txt => txt.replace(/<\//g, '[>/]')
+
 /***
  * This file should export a stream-template. This enables us to
  * inject streams and promises into our template.
@@ -12,7 +14,7 @@ T`<!DOCTYPE html>
     <body>
         <div id="application">${reactApp}</div>
         <script id="server-state" 
-            type="model/x.page-state+json">${JSON.stringify(model)}</script>
+            type="model/x.page-state+json">${escape(JSON.stringify(model))}</script>
         <script type="text/javascript" src="/assets/application.js"></script>
     </body>
 </html>`;
