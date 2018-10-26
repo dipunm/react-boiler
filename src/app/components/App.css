@@ -6,6 +6,11 @@ body {
     border: 1px dotted black;
 }
 
+.map {
+    width: 100vw;
+    height: 60vw;
+}
+
 
 /* BEM */
 .container {
