@@ -4,7 +4,7 @@ import qs from 'query-string';
 
 import App from './app/App';
 
-const req = () => {
+const buildReq = () => {
     return {
         query: qs.parse(document.location.search),
         path: document.location.pathname,
@@ -13,15 +13,19 @@ const req = () => {
     }
 }
 
-export const initClient = async (buildViewModel) => {
+export const initClient = async (buildPageState) => {
     console.log('browser start')
 
     const unescape = txt => txt.replace(/\[>\/\]/g, '</')
 
     const json = document.getElementById('server-state').innerText;
-    const state = JSON.parse(unescape(json));
+    const capturedVm = JSON.parse(unescape(json));
 
-    const viewModel = await buildViewModel(req(), state);
+    const req = buildReq(), locals = {};
+    const context = { req, locals, capturedVm };
+    const pageState = await buildPageState(context, req, locals);
     
-    hydrate(<App {...viewModel} />, document.getElementById('application'));
+    document.title = pageState.viewModel.title;
+
+    hydrate(<App {...pageState} context={context} />, document.getElementById('application'));
 }

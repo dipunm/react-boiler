@@ -5,7 +5,7 @@ const escape = txt => txt.replace(/<\//g, '[>/]')
  * This file should export a stream-template. This enables us to
  * inject streams and promises into our template.
  */
-export default ({model, reactApp}) =>
+export default (_context, {model, reactApp}) =>
 T`<!DOCTYPE html>
 <html>
     <head>

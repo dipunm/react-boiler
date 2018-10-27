@@ -1,0 +1,1 @@
+export const removeOpenComponentMarkup = (model) => ({ ...model, openComponents: {} });

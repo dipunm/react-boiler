@@ -1,9 +1,10 @@
-const store = {};
+import { getStoredComponents } from '../../client/oc/getStoredComponents';
+import { getComponentsFromContext } from '../../server/oc/getComponentsFromContext';
 
-export function storeMarkups(markups) {
-    Object.assign(store, markups);
-}
-
-export function getMarkup(key) {
-    return store[key];
+export const getMarkup = (context, key) => {
+    if (process.env.IS_BROWSER) {
+        return getStoredComponents(context)[key];
+    } else {
+        return getComponentsFromContext(context);
+    }
 }

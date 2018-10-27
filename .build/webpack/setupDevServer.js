@@ -4,10 +4,10 @@ module.exports = async (config) => {
     require('@babel/register');
     
     const { setupMiddleware } = require('../../src/server/express');
-    const { requestHandler } = require('../../src/app/routes/index');
+    const { buildPageState } = require('../../src/app/routes/buildPageState');
 
     config.devServer = {
       contentBase: path.join(__dirname, 'dist'),
-      before: (app) => setupMiddleware(app, requestHandler),
+      before: (app) => setupMiddleware(app, buildPageState),
     }
 }

@@ -1,5 +1,5 @@
-import { getOcClient } from './index'
-export const fetchOcComponents = async (components) => {
+import { getOcClient } from './getOcClient'
+export const fetchOpenComponents = async (components) => {
     const oc = await getOcClient();
     const options = {
         headers: {

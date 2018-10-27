@@ -1,11 +1,11 @@
 import * as home from './home';
 
 const determineRoute = () => 'home';
-export async function requestHandler(req, locals) {
+export async function buildPageState(context, req, locals) {
     const route = determineRoute(req);
 
     if (route === 'home') {
-        await home.setModels(req, locals);
+        await home.setModels(context, req, locals);
         return locals;
     }
 }

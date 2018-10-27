@@ -5,22 +5,11 @@ import Promise from 'bluebird';
 import registerSecurityHeaders from './middleware/helmet-security';
 import registerReactApp from './middleware/react-app';
 
-export function setupMiddleware(app, buildViewModel) {
-    /**
-     * const discoveryToBe = startDiscovery();
-     * const ocClientToBe = getOcClient(await discoveryToBe);
-     * 
-     * const ocClient = async () => {
-     *   const discovery = await startDiscovery()
-     *   const ocClient = await getOcClient()
-     *   return ocClient;
-     * }
-     * 
-     */
+export function setupMiddleware(app, buildPageState) {
     console.log('server start')
 
     registerSecurityHeaders(app);
-    registerReactApp(app, buildViewModel);
+    registerReactApp(app, buildPageState);
     return app;
 }
 

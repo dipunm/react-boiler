@@ -1,9 +1,9 @@
-import { startExpressServer } from '../server';
-import { initClient } from '../client';
-import { requestHandler } from './routes';
+import { startExpressServer } from '../server.start';
+import { initClient } from '../client.start';
+import { buildPageState } from './routes/buildPageState';
 
 if (process.env.IS_BROWSER) {
-    initClient(requestHandler);
+    initClient(buildPageState);
 } else {
-    startExpressServer(requestHandler);
+    startExpressServer(buildPageState);
 }

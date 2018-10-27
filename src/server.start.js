@@ -7,8 +7,8 @@ import express from 'express';
 
 import { setupMiddleware, listen } from './server/express';
 
-export const startExpressServer = (buildViewModel) => (async () => {
+export const startExpressServer = (buildPageState) => (async () => {
     const app = express();
-    await setupMiddleware(app, buildViewModel);
+    await setupMiddleware(app, buildPageState);
     await listen(app)
 }).catch(console.log);
