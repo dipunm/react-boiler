@@ -1,3 +1,8 @@
+# Entry file
+The main entry file is `src/app/index.js`. 
+During development, we use webpack to host and serve our application so the entry file for the server will is `webpack.config.js` but the client side code is still loaded via `src/app/index.js`.
+
+
 # Client Side First
 When importing dependencies, there are two aliases configured to help ease development.
 

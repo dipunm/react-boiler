@@ -1,10 +1,10 @@
-import { getStoredComponents } from '../../client/oc/getStoredComponents';
-import { getComponentsFromContext } from '../../server/oc/getComponentsFromContext';
+import { getComponentsFromContextOnClient } from '../../client/oc/getComponentsFromContextOnClient';
+import { getComponentsFromContextOnServer } from '../../server/oc/getComponentsFromContextOnServer';
 
 export const getMarkup = (context, key) => {
     if (process.env.IS_BROWSER) {
-        return getStoredComponents(context)[key];
+        return getComponentsFromContextOnClient(context)[key];
     } else {
-        return getComponentsFromContext(context);
+        return getComponentsFromContextOnServer(context);
     }
 }

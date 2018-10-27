@@ -1,8 +1,9 @@
 import React from 'react';
 
 import { buildUrl, dangerousHtml, shallowCompare } from './lib';
-import { SeedContext } from '../SeedContext';
+import { SeedContext } from '../context/SeedContext';
 import { getMarkup } from './markupStore';
+import { loadComponentOnClient } from '../../client/oc/loadComponentOnClient';
 
 export class Oc extends React.Component {
   constructor(props) {
@@ -41,7 +42,8 @@ export class Oc extends React.Component {
     const {container, saveContainer, mountable = true} = this.props;
 
     if (mountable && !container && !saveContainer) {
-      console.warn(`${this}`)
+      console.warn(`Warning: an OpenComponent was loaded without a saveContainer prop. 
+If you do not intent to unmount and re-mount this component, please add mountable={false} to the component.`, this.props);
     }
 
     if (container) {
@@ -49,10 +51,7 @@ export class Oc extends React.Component {
       this.ref.current.appendChild(container);
     } else {
       const component = this.ref.current.getElementsByTagName("oc-component")[0];
-      window.oc.renderNestedComponent($(component), () => {
-        if (!container && saveContainer)
-        saveContainer(component);
-      });
+      loadComponentOnClient({component, container, saveContainer});
     }
   }
 

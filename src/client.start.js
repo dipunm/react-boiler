@@ -1,10 +1,14 @@
 import React from 'react';
 import { hydrate } from 'react-dom';
-import qs from 'query-string';
 
 import App from './app/App';
+import { buildPageState } from "./app/routes/buildPageState";
+import { createContext } from "./app/context/createContext";
 
-const buildReq = () => {
+
+import qs from 'query-string';
+
+const buildReqForApp = () => {
     return {
         query: qs.parse(document.location.search),
         path: document.location.pathname,
@@ -13,7 +17,7 @@ const buildReq = () => {
     }
 }
 
-export const initClient = async (buildPageState) => {
+export const initClient = async () => {
     console.log('browser start')
 
     const unescape = txt => txt.replace(/\[>\/\]/g, '</')
@@ -21,11 +25,11 @@ export const initClient = async (buildPageState) => {
     const json = document.getElementById('server-state').innerText;
     const capturedVm = JSON.parse(unescape(json));
 
-    const req = buildReq(), locals = {};
-    const context = { req, locals, capturedVm };
-    const pageState = await buildPageState(context, req, locals);
+    const context = createContext(capturedVm);
+    const req = buildReqForApp();
+    const pageState = await buildPageState(context, req, context.locals);
     
     document.title = pageState.viewModel.title;
 
-    hydrate(<App {...pageState} context={context} />, document.getElementById('application'));
+    hydrate(<App {...pageState.viewModel} context={context} />, document.getElementById('application'));
 }

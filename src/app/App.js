@@ -2,7 +2,7 @@ import React from 'react';
 import { hot } from 'react-hot-loader'
 
 import { Oc } from './oc/ocComponent';
-import { SeedContext } from './SeedContext';
+import { SeedContext } from './context/SeedContext';
 import styles from './App.css'
 import './App.css'
 
@@ -43,6 +43,7 @@ class App extends React.Component {
     render() {
         return (
             <SeedContext.Provider value={this.props.context}>
+                {this.props.something}
                 <div className={styles.test}>
                     <h1>Client rendered map:</h1>
                     {this.toggled('hideMap', 

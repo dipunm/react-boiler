@@ -1,9 +1,9 @@
 import { fetchOpenComponents } from "../../server/oc/fetchOpenComponents";
-import { getStoredComponents } from "../../client/oc/getStoredComponents";
+import { getComponentsFromContextOnClient } from "../../client/oc/getComponentsFromContextOnClient";
 
 export const getComponents = (context, components) => {
     if (process.env.IS_BROWSER) {
-        return getStoredComponents(context);
+        return getComponentsFromContextOnClient(context);
     } else {
         return fetchOpenComponents(components);
     }
