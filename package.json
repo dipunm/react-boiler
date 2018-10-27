@@ -6,7 +6,8 @@
   "scripts": {
     "start": "nodemon --exec BABEL_ENV=node babel-node src/server/index.js --inspect=1234",
     "debug": "nodemon --exec BABEL_ENV=node babel-node src/server/index.js --inspect-brk=1234",
-    "webpack": "webpack-dev-server --env.NODE_ENV=local --hot"
+    "webpack": "webpack-dev-server --env.NODE_ENV=local --hot",
+    "webpack2": "webpack --env.NODE_ENV=local"
   },
   "keywords": [],
   "author": "",
@@ -23,7 +24,8 @@
     "query-string": "^6.2.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
-    "stream-template": "0.0.10"
+    "stream-template": "0.0.10",
+    "webpack-register": "^0.2.6"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

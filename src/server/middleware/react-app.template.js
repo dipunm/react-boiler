@@ -9,6 +9,7 @@ export default ({model, reactApp}) =>
 T`<!DOCTYPE html>
 <html>
     <head>
+        <title>${model.title}</title>
         ${"<!-- this is where we would get the header stuff -->"}
         <script>window.OT = window.OT || {};
 window.OT.SRS = {

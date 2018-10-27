@@ -1,118 +1,89 @@
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
-import buildTemplate from '../../app/react-app.template';
+import buildTemplate from './react-app.template';
+import { Router } from 'express';
 
-import App from '../../app/components/App';
-import dipun from '../../server/dipun.oc';
-import Discovery from 'ot-discovery';
-import OcClient from 'ot-oc-client';
 
-var initialise = function(callback) {
-    // Discovery initialisation.
-    // This can happen anywhere in the code.
+import App from '../../app/App';
+import { fetchOcComponents } from '../oc/utils'
 
-    console.log('initialising oc');
+/*
+const router = Router();
 
-    var disco = new Discovery(
-      'discovery-pp-sf.otenv.com',
-      ['discovery-pp-sf.otenv.com'],
-      'pp-sf',
-      'test-app',
-      {
-        logger: { log: () => {}, debug: () => {} }
-      }
-    );
+router.get('/multi-search',
+    multiSearch.buildViewModelForServer,
+    multiSearch.fetchOpenComponents,
+    createReactStream,
+    multiSearch.buildViewModelForClient,
+    multiSearch.renderTemplate
+);
 
-    disco.connect(function(err) {
-        console.log('connected to discovery');
-      if (err) {
-        return callback(err);
-      }
+router.get('/my-list',
+    myList.buildViewModelForServer,
+    myList.fetchOpenComponents,
+    createReactStream,
+    myList.buildViewModelForClient,
+    myList.renderTemplate
+);
 
-      var ocClient = new OcClient({
-        timeout: 5,
-        environment: 'pp-sf',
-        discovery: disco,
-        components: {
-          footer: '1.x.x'
-        }
-      });
-
-      // OC client warmup, optional, will download and cache components' views.
-
-      ocClient.init({}, function(err, result) {
-        console.log('oc initialised', ocClient);
-        callback(err, ocClient);
-      });
-    });
-  };
-
-  const allData = new Promise((resolve, reject) => {
-    initialise((err, oc) => {
-        if (err) {
-            return reject(err);
-        }
-
-        console.log('getting data')
-        oc.renderComponents(
-            [
-              { name: 'footer' },
-            ],
-            {
-              headers: {
-                'accept-language': 'en-US'
-              },
-              parameters: {
-                theme: 'com',
-                metroId: '4'
-              }
-            },
-            function(err, result) {
-                if (err) {
-                    return reject(err);
-                }
-
-                // Result will be an array with the same order of the requested components
-                const [footer] = result;
-                console.log('resolving footer', footer);
-                resolve({
-                    dipun0: dipun(0),
-                    dipun2: dipun(2),
-                    footer
-                })
-            }
-        );
-    })
-});
-const getAllData = () => allData;
-
-async function renderToStream(req) {
-    const requestState = req;
-    const data = await getAllData(requestState);
-    console.log(data);
-    const reactApp = renderToNodeStream(<App {...data} />)
-    const template = buildTemplate({
-        reactApp,
-        model: data || {}
-    });
-    return template;
+*/
+/*
+const router = async (req, locals) => {
+    if (req.path === 'one') {
+        return await signature(req, locals);
+    }
 }
+///////////// tree shaking enabled module replacements.
+
+import { log as logServer } from "../server/log";
+import { log as logClient } from "../client/log";
+
+export const log = INBROWSER ? logClient : logServer;
+
+/////////////
+
+import { log } from './log';
+const signature = async (req, locals) => {
+    req.query;
+    req.path;
+    req.cookies;
+    req.domain;
+
+    log('hello');
+
+    locals.toggles;
+    locals.viewModel;
+    locals.openComponents;
+}
+
+*/
+
+
+  
+const getViewModel = () => ({});
 
 // to support webpack-dev-server:
 // assets folder is excluded. (to allow serving from /assets/*)
 // any file with an extension is excluded. (to prevent blocking hot-module-reloading json file)
 const allRoutes = /^(?!\/assets\/)(?!.*\.\w+([?#].*)?$).*/
 
-export default (app) => {
-    app.get(allRoutes, (req, res, next) => {
-        console.log('INTERFERING!', req.path)
-        renderToStream(req).then(stream => {
-            res.contentType('html');
-            stream.pipe(res, {end: false});
-            stream.on('end', () => {
-                res.end();
-                //next();
-            });
-        }).catch(next);
-    });
+export default (app, buildViewModel) => {
+/*
+    app.get(allRoutes, ...[
+        // Route
+        // 
+    ]);
+*/
+    app.get(allRoutes, (req, res, next) => (async () => {
+        res.locals = await buildViewModel(req, res.locals);
+
+        const reactApp = renderToNodeStream(<App {...res.locals.viewModel} ocComponents={res.locals.ocComponents} />)
+        const stream = buildTemplate({reactApp, model: res.locals.viewModel});
+
+        res.contentType('html');
+        stream.pipe(res, {end: false});
+        stream.on('end', () => {
+            res.end();
+        });
+    })().catch(next));
 }

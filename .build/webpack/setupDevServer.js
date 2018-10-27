@@ -1,12 +1,13 @@
 const path = require('path');
 
-module.exports = (config) => {
+module.exports = async (config) => {
     require('@babel/register');
+    
     const { setupMiddleware } = require('../../src/server/express');
+    const { requestHandler } = require('../../src/app/routes/index');
 
     config.devServer = {
       contentBase: path.join(__dirname, 'dist'),
-      //port: 9000,
-      before: setupMiddleware,
+      before: (app) => setupMiddleware(app, requestHandler),
     }
 }
