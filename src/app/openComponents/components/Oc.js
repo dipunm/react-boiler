@@ -1,14 +1,15 @@
 import React from 'react';
 
-import { buildUrl, dangerousHtml, shallowCompare } from './lib';
-import { SeedContext } from '../context/SeedContext';
-import { getMarkup } from './markupStore';
-import { loadComponentOnClient } from '../../client/oc/loadComponentOnClient';
+import { buildUrl, dangerousHtml, shallowCompare } from '../lib';
+import { SeedContext } from '../../context/SeedContext';
+import { getPrefetchedOpenComponentMarkup } from '../getPrefetchedOpenComponentMarkup';
+import { renderComponentOnClient } from '../renderComponentOnClient';
 
 export class Oc extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
+    this.showServerMarkup = true;
   }
 
   shouldComponentUpdate(newProps) {
@@ -51,7 +52,7 @@ If you do not intent to unmount and re-mount this component, please add mountabl
       this.ref.current.appendChild(container);
     } else {
       const component = this.ref.current.getElementsByTagName("oc-component")[0];
-      loadComponentOnClient({component, container, saveContainer});
+      renderComponentOnClient({component, saveContainer});
     }
   }
 
@@ -59,7 +60,7 @@ If you do not intent to unmount and re-mount this component, please add mountabl
     const { serverRenderKey, name, version, params, className } = this.props;    
     return (
       <SeedContext.Consumer>{(context) =>{
-        const serverHtml = getMarkup(context, serverRenderKey);
+        const serverHtml = getPrefetchedOpenComponentMarkup(context, serverRenderKey);
         
         const html = this.showServerMarkup && typeof serverHtml === 'string' ?
           `<oc-component data-rendered="true">${serverHtml}</oc-component>` :

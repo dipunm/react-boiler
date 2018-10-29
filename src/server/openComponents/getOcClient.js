@@ -1,6 +1,6 @@
 import OcClient from 'ot-oc-client';
 import { getDiscovery } from '../discovery';
-import componentsToPreWarm from './componentsToPrewarm';
+import componentsToPreWarm from './componentsToPreWarm';
 
 
 let instance = null;
@@ -28,4 +28,13 @@ export async function getOcClient() {
     }
 
     return instance;
+}
+
+export function ocFallback(err) {
+    console.error(err);
+    return {
+        renderComponents: (comps, opts, cb) => {
+            cb(null, comps.map(({name}) => `Unable to fetch component: ${name}, ${JSON.stringify(opts)}`));
+        }
+    }
 }

@@ -10,7 +10,7 @@ function startDiscovery() {
                 'pp-sf',
                 'test-app',
                 {
-                    logger: { log: () => {}, debug: () => {} }
+                    logger: { log: () => {}, debug: () => {}, error: () => {} }
                 }
             );
 

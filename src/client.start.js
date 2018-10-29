@@ -2,20 +2,9 @@ import React from 'react';
 import { hydrate } from 'react-dom';
 
 import App from './app/App';
-import { buildPageState } from "./app/routes/buildPageState";
+import { buildPageModel } from "./app/routes/buildPageModel";
 import { createContext } from "./app/context/createContext";
-
-
-import qs from 'query-string';
-
-const buildReqForApp = () => {
-    return {
-        query: qs.parse(document.location.search),
-        path: document.location.pathname,
-        cookies: document.cookie.split(';'), // TODO: implement properly
-        domain: document.location.host
-    }
-}
+import { createRequestOnClient } from './client/bootstrapping/createRequestOnClient';
 
 export const initClient = async () => {
     console.log('browser start')
@@ -26,10 +15,10 @@ export const initClient = async () => {
     const capturedVm = JSON.parse(unescape(json));
 
     const context = createContext(capturedVm);
-    const req = buildReqForApp();
-    const pageState = await buildPageState(context, req, context.locals);
+    const req = createRequestOnClient();
+    await buildPageModel(context, req, context.locals);
     
-    document.title = pageState.viewModel.title;
+    document.title = context.locals.title;
 
-    hydrate(<App {...pageState.viewModel} context={context} />, document.getElementById('application'));
+    hydrate(<App {...context.locals} context={context} />, document.getElementById('application'));
 }

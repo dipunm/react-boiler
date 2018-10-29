@@ -3,12 +3,12 @@
 }
 
 .test {
-    border: 1px dotted black;
+    border: 5px dotted rgb(231, 11, 11);
 }
 
 .map {
-    width: 100vw;
-    height: 60vw;
+    width: 80vw;
+    height: 10vw;
 }
 
 

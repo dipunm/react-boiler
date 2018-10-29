@@ -1,6 +1,6 @@
-import { getOcClient } from './getOcClient'
+import { getOcClient, ocFallback } from './getOcClient'
 export const fetchOpenComponents = async (components) => {
-    const oc = await getOcClient();
+    const oc = await getOcClient().catch(ocFallback);
     const options = {
         headers: {
             'accept-language': 'en-US'

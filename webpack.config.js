@@ -18,14 +18,15 @@ const removeServerLogic = (config) => {
       if (requestFromAppFolder) {
         resource.request = path.resolve(__dirname, '.build/webpack/noop.js');
       }
-    }
-  ));
+    }),
+    new NormalModuleReplacementPlugin(/src\/server\.start/, path.resolve(__dirname, '.build/webpack/noop.js'))
+  );
 }
 
 module.exports = async function (env = {}) {
 
   const config = {
-    entry: './src/app/index.js',
+    entry: './src/index.js',
     devtool: 'source-map',
     target: 'web',
     output: {

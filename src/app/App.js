@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader'
 
-import { Oc } from './oc/ocComponent';
+import { Oc } from './openComponents/components/Oc';
 import { SeedContext } from './context/SeedContext';
 import styles from './App.css'
 import './App.css'
@@ -45,7 +45,7 @@ class App extends React.Component {
             <SeedContext.Provider value={this.props.context}>
                 {this.props.something}
                 <div className={styles.test}>
-                    <h1>Client rendered map:</h1>
+                    <h1>Client rendered map FEDERE:</h1>
                     {this.toggled('hideMap', 
                         <Oc className={styles.map} name='ot-react-maps-oc' version='5.x.x' params={mapsParams} mountable={false} />)}
                     

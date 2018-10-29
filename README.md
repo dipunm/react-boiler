@@ -1,10 +1,28 @@
 # Entry file
-The main entry file is `src/app/index.js`. 
-During development, we use webpack to host and serve our application so the entry file for the server will is `webpack.config.js` but the client side code is still loaded via `src/app/index.js`.
+The main entry file is `src/index.js` for both the client and server. 
+During development, we use webpack to host and serve our application so the entry file for the server will is technically `webpack.config.js` but the client side code is still loaded via `src/index.js`.
 
 
-# Client Side First
-When importing dependencies, there are two aliases configured to help ease development.
+# 3 contexts signature
+In order to keep the business logic clean, there exists three standard parameters that is typically passed from function to function: `req`, `locals` and `context`.
+
+## `req`
+In order to build a fully universal application, we must not tie ourselves to a specific implementation of request. Any property existing on this parameter must be able to provide a sensible value both on the client-side and server-side. Although this reduces the amount of information available to your functions, it also improves the usefulness of any code that uses it. Any code using `req` as is, typically can run universally on server-side and client-side.
+
+## `locals`
+Instead of exposing an express `res`, we chose to expose the `locals` property. The locals parameter is a simple plain object which makes it easy to recreate on the client-side. We use `locals` directly as the view-model. Any data here is sent to the root react component `App` as props and given to the template during server-side rendering. See `client.start.js` and `server.start.js`. 
+
+## `context`
+On node, multiple requests are handled by the same global scope. Apart from passing dependencies down a large chain of functions, there are few ways to share dependencies between functions. The context object serves as a `request-context` on the server-side, and a `server-response-context` on the client-side. They may have unique structures and should not be used by any functions designed to be universal. 
+
+ - Using `context` in your function will inheritly tie it to either a server or client implementation.
+ - These functions will typically live in their respective `client` or `server` folders.
+ - You should avoid storing functions on the context, instead store some state for the desired function to consume.
+ - - As an example, instead of storing an initialised logger, store the default headers and use the original logger. (This will make code discovery easier because implementations of functions are imported and not implicitly passed around)
+ - Use a `partition-file` (coined here) to enable callers of your function to remain universal.
+ - - An example of one of these files is `src/app/context/createContext.js`. These files are optimised at build time but are designed to make the separation of client and server logic easy to navigate, manage, and discover.
+ - Whilst defining the react dom, you can use the `SeedContext` to gain access to the `context` object. You should treat it like a [handle](https://docs.microsoft.com/en-us/windows/desktop/sysinfo/handles-and-objects) and never access its properties directly from the component. Instead, you should import a `partitioned` (coined again) function and allow it to deal with reading the context object.
+ - - See `src/app/openComponents/components/Oc.js` for an example of this.
 
 
 ===================
