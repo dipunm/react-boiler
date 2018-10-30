@@ -23,9 +23,6 @@ module.exports = (api) => {
     other.sourceType = "unambiguous";
     // other.sourceFileName = "index.js";
 
-    return {
-        presets,
-        plugins,
-        ...other
-    }
+    const config = { presets, plugins };
+    return Object.assign(config, other);
 };
