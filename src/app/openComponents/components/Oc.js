@@ -1,11 +1,10 @@
 import React from 'react';
 
 import { buildUrl, dangerousHtml, shallowCompare } from '../lib';
-import { SeedContext } from '../../context/SeedContext';
-import { getPrefetchedOpenComponentMarkup } from '../getPrefetchedOpenComponentMarkup';
+import { OcContextConsumer } from './OcContext';
 import { renderComponentOnClient } from '../renderComponentOnClient';
 
-export class Oc extends React.Component {
+class OpenComponent extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
@@ -40,12 +39,7 @@ export class Oc extends React.Component {
   }
 
   componentDidMount() {
-    const {container, saveContainer, mountable = true} = this.props;
-
-    if (mountable && !container && !saveContainer) {
-      console.warn(`Warning: an OpenComponent was loaded without a saveContainer prop. 
-If you do not intent to unmount and re-mount this component, please add mountable={false} to the component.`, this.props);
-    }
+    const {container, saveContainer} = this.props;
 
     if (container) {
       this.ref.current.innerHTML = '';
@@ -57,19 +51,39 @@ If you do not intent to unmount and re-mount this component, please add mountabl
   }
 
   render() {
-    const { serverRenderKey, name, version, params, className } = this.props;    
-    return (
-      <SeedContext.Consumer>{(context) =>{
-        const serverHtml = getPrefetchedOpenComponentMarkup(context, serverRenderKey);
-        
-        const html = this.showServerMarkup && typeof serverHtml === 'string' ?
-          `<oc-component data-rendered="true">${serverHtml}</oc-component>` :
-          `<oc-component href="${buildUrl(name, version, params)}" data-name="${name}" data-rendered="false"></oc-component>`;
+    const { id, serverHtml, name, version, params, className } = this.props;
 
-        return <div ref={this.ref} className={className} dangerouslySetInnerHTML={dangerousHtml(html)} suppressHydrationWarning={true} />
-      }}</SeedContext.Consumer>
-    );
+    const html = this.showServerMarkup && typeof serverHtml === 'string' ?
+      `<oc-component data-rendered="true">${serverHtml}</oc-component>` :
+      `<oc-component href="${buildUrl(name, version, params)}" data-name="${name}" data-rendered="false"></oc-component>`;
+
+    return <div ref={this.ref} id={id} className={className} dangerouslySetInnerHTML={dangerousHtml(html)} suppressHydrationWarning={true} />
   }
 }
 
-Oc.contextType = SeedContext;
+export const Oc = (props) => (
+  <OcContextConsumer>{
+    (ocContext) => {
+      console.log('ocContext', ocContext);
+      const { serverRenderKey, captureKey } = props;
+      if (!ocContext && captureKey) {
+        console.warn(
+          `captureKey prop was provided but no there is no OcContextProvider wrapping this component. `+
+          `This component will make a call to the oc registry every time it loads`
+        );
+      }
+
+      const serverHtml = ocContext ? ocContext.markups[serverRenderKey || captureKey] : undefined;
+      const container = ocContext && captureKey ? ocContext.captures[captureKey] : undefined
+      const saveContainer = ocContext && captureKey ? 
+        (container) => ocContext.saveContainer(captureKey, container): 
+        undefined
+
+      return <OpenComponent {...props} 
+        serverHtml={serverHtml}
+        container={container}
+        saveContainer={saveContainer}
+      />;
+    }
+  }</OcContextConsumer>
+)

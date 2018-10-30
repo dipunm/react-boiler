@@ -10,7 +10,6 @@ T`<!DOCTYPE html>
 <html>
     <head>
         <title>${model.title}</title>
-        ${"<!-- this is where we would get the header stuff -->"}
         <script>window.OT = window.OT || {};
 window.OT.SRS = {
   abTestingAnalytics: {"account":"2d65a94551a4a1caddd5a825a88698a89e19f2d5","hostname":"ac.opentable.com"},

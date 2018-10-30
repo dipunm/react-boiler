@@ -2,7 +2,7 @@ import express from 'express';
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
 
-import buildTemplate from './template';
+import buildTemplate from './server.template';
 import App from './app/App';
 import { buildPageModel } from './app/routes/buildPageModel';
 import { createContext } from './app/context/createContext';

@@ -1,6 +1,5 @@
-export const createContextOnClient = (...args) => {
-    const [capturedVm] = args;
-    const context = { locals: {}, capturedVm };
+export const createContextOnClient = (capturedVm, locals) => {
+    const context = { locals, capturedVm };
     return context;
 }
 

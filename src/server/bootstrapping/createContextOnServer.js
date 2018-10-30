@@ -1,4 +1,3 @@
-export const createContextOnServer = (...args) => {
-    const [req, res] = args;
+export const createContextOnServer = (req, res) => {
     return { req, res, misc: {} };
 }
