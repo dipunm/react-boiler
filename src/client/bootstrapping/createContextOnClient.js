@@ -1,5 +1,5 @@
-export const createContextOnClient = (stateModel, locals) => {
-    const context = { locals, stateModel };
+export const createContextOnClient = (stateModel) => {
+    const context = { stateModel };
     return context;
 }
 

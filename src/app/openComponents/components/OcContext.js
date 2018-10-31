@@ -4,7 +4,7 @@ const Context = React.createContext(false);
 export class OcContextProvider extends React.Component {
     constructor(props) {
         super(props);
-    
+
         const captures = {};
         const markups = {...props.preFetchedComponents};
         const baseUrl = props.baseUrl;
@@ -28,9 +28,8 @@ export class OcContextProvider extends React.Component {
     }
 
     render() {
-        console.log('re-rendering!');
         return <Context.Provider value={{
-            ...this.state, 
+            ...this.state,
             saveContainer: (key, container) => this.saveContainer(key, container)}}>{
                 this.props.children
             }</Context.Provider>;

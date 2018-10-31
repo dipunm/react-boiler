@@ -1,3 +1,4 @@
+import Promise from 'bluebird';
 import OcClient from 'ot-oc-client';
 import { getDiscovery } from '../discovery';
 import componentsToPreWarm from './componentsToPreWarm';
@@ -15,7 +16,7 @@ export async function getOcClient() {
             discovery,
             components: componentsToPreWarm
         });
-    
+
         const fifteenSeconds = 15;
         instance = new Promise((resolve, reject) => {
             ocClient.init({ timeout: fifteenSeconds }, (err) => {

@@ -16,11 +16,12 @@ export const initClient = async () => {
     const json = document.getElementById('server-state').innerText;
     const stateModel = JSON.parse(unescape(json));
 
-    const locals = {};
-    const context = createContext(stateModel, locals);
+    const context = createContext(stateModel);
     const req = createRequestOnClient();
-    await buildPageModel(context, req, locals);
-    
+    const locals = await buildPageModel(context, req);
+
     setHeadTags(locals);
-    hydrate(<App {...context.locals} context={context} />, document.getElementById('application'));
+    hydrate(<App {...locals} context={context} />, document.getElementById('application'));
 }
+
+

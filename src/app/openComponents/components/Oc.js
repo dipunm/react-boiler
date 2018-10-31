@@ -65,7 +65,6 @@ class Oc extends React.Component {
 export const OpenComponent = (props) => (
   <OcContextConsumer>{
     (ocContext) => {
-      console.log('ocContext', ocContext);
       const { serverRenderKey, captureKey } = props;
       if (!ocContext && captureKey) {
         console.warn(
@@ -76,13 +75,13 @@ export const OpenComponent = (props) => (
 
       const serverHtml = ocContext.markups[serverRenderKey || captureKey];
       const container = captureKey ? ocContext.captures[captureKey] : undefined;
-      const saveContainer = captureKey ? 
-        (container) => ocContext.saveContainer(captureKey, container): 
+      const saveContainer = captureKey ?
+        (container) => ocContext.saveContainer(captureKey, container):
         undefined;
       const baseUrl = ocContext.baseUrl;
       const lang = ocContext.lang;
-      
-      return <Oc {...props} 
+
+      return <Oc {...props}
         serverHtml={serverHtml}
         container={container}
         saveContainer={saveContainer}

@@ -46,30 +46,30 @@ class App extends React.Component {
         return (
             <SeedContext.Provider value={this.props.context}>
                 <div>
-                    <OcContextProvider 
-                        preFetchedComponents={this.props.context.openComponents} 
-                        baseUrl='https://oc-registry.opentable.com/v2/'
+                    <OcContextProvider
+                        preFetchedComponents={this.props.context.openComponents}
+                        baseUrl='https://oc-registry.opentable.com/v2'
                         lang='en-GB'
                         componentTagRenderer={buildOcTag}>
 
                         {this.props.something}
                         <div className={styles.test}>
                             <h1>Client rendered map JAMES:</h1>
-                            {this.toggled('hideMap', 
+                            {this.toggled('hideMap',
                                 <OpenComponent className={styles.map} name='ot-react-maps-oc' version='5.x.x' parameters={mapsParams} mountable={false} />)}
-                            
+
                             <h1>Client rendered map (mountable):</h1>
-                            {this.toggled('hideMap2', 
+                            {this.toggled('hideMap2',
                                 <OpenComponent className={styles.map} name='ot-react-maps-oc' version='5.x.x' parameters={mapsParams}
                                 captureKey='map2' />)}
 
                             <h1>Server rendered footer (mountable):</h1>
-                            {this.toggled('hideFooter1', 
+                            {this.toggled('hideFooter1',
                                 <OpenComponent name='footer' version='1.x.x' parameters={{}} serverRenderKey='footer'
                                 captureKey='footer1' />)}
 
                             <h1>Server rendered footer (not-mountable):</h1>
-                            {this.toggled('hideFooter2', 
+                            {this.toggled('hideFooter2',
                                 <OpenComponent name='footer' version='1.x.x' parameters={{}} mountable={true} serverRenderKey='footer' />)}
                         </div>
                     </OcContextProvider>
