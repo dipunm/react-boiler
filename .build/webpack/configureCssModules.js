@@ -1,14 +1,37 @@
-module.exports = (config) => {
+/**
+ * css-loader: treats css as raw text while treating @import and url statements as require().
+ * ### file1.css ###
+ * body { background-color: red; }
+ * @import('file2.css');
+ * 
+ * ### file2.css ###
+ * h1 {color: white};
+ * 
+ * ### output:
+ * body { background-color: red; }
+ * h1 {color: white};
+ * 
+ * style-loader:
+ * 
+ */
+module.exports = (config, styleLoaders = [], stylePlugins = []) => {
   config.module = config.module || {};
   config.module.rules = config.module.rules || [];
+  config.plugins = config.plugins || [];
 
-  config.module.rules.push({
-      test: /\.css$/, use: ["style-loader", {
-        loader: "css-loader",
+  const cssConfig = {
+    test: /\.css$/, use: [
+      ...styleLoaders, 
+      {
+        loader: "css-loader", 
         options: {
           modules: true,
-          localIdentName: '[hash:base64:3][name]__[local]'
+          localIdentName: 'a[hash:base32:4]•[local]'
         }
-      }]
-  });
+      }
+    ]
+  };
+  config.module.rules.push(cssConfig);
+  config.plugins.push(...stylePlugins);
+  return cssConfig;
 };

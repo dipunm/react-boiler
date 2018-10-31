@@ -24,7 +24,8 @@ On node, multiple requests are handled by the same global scope. Apart from pass
  - Whilst defining the react dom, you can use the `SeedContext` to gain access to the `context` object. You should treat it like a [handle](https://docs.microsoft.com/en-us/windows/desktop/sysinfo/handles-and-objects) and never access its properties directly from the component. Instead, you should import a `partitioned` (coined again) function and allow it to deal with reading the context object.
  - - See `src/app/openComponents/components/Oc.js` for an example of this.
 
-
+# Universal app restrictions
+Any code within the `src/app` folder must not read or modify the context parameter.
 ===================
 
 

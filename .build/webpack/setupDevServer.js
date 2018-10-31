@@ -1,25 +1,26 @@
 const path = require('path');
-var chokidar = require('chokidar')
+const debounce = require('debounce');
+const chokidar = require('chokidar')
+const dynamic = require('dynamic-middleware');
 
 module.exports = async (config) => {
-  require('@babel/register');
-  const debounce = require('debounce');
-  
   const warmRequire = require('warm-require').watch({
-		paths: path.join(__dirname, '../../' ,'src')
+    paths: path.join(__dirname, '../../' ,'src')
   });
-  const dynamic = require('dynamic-middleware');
+  
   
   // to support webpack-dev-server:
   // assets folder is excluded. (to allow serving from /assets/*)
   // any file with an extension is excluded. (to prevent blocking hot-module-reloading json file)
   const safeRoutes = /^(?!\/assets\/)(?!.*\.\w+([?#].*)?$).*/
-
+  
   let dynamicApp;
-
+  
   config.devServer = {
     contentBase: path.join(__dirname, 'dist'),
     before: async (app) => {
+      require('@babel/register');
+      console.log('starting express app...')
       const { setupMiddleware } = warmRequire(path.join(__dirname, '../../src/server/express/setup'));
       const { setupPages } = warmRequire(path.join(__dirname, '../../src/server.start'));
       const sub = require('express')();
@@ -52,7 +53,11 @@ module.exports = async (config) => {
   }, 500)
 
   //credit: https://codeburst.io/dont-use-nodemon-there-are-better-ways-fc016b50b45e
-  var watcher = chokidar.watch(path.join(__dirname, '../../' ,'src'))
+  var watcher = chokidar.watch([
+    path.join(__dirname, '../../' ,'src/app'),
+    path.join(__dirname, '../../' ,'src/server'),
+    path.join(__dirname, '../../' ,'src/server.*')
+  ])
   watcher.on('ready', () => {
     watcher.on('all', (event, path) => {
       console.log(`Changes (type:${event}) detected for server: ${path}. Clearing cache for this file.`);

@@ -1,8 +1,9 @@
 import React from 'react';
 import { hot } from 'react-hot-loader'
 
-import { Oc } from './openComponents/components/Oc';
+import { OpenComponent } from './openComponents/components/Oc';
 import { OcContextProvider } from './openComponents/components/OcContext';
+import { buildOcTag } from './openComponents/buildOcTag';
 import { SeedContext } from './context/SeedContext';
 import styles from './App.css'
 import './App.css'
@@ -45,32 +46,33 @@ class App extends React.Component {
         return (
             <SeedContext.Provider value={this.props.context}>
                 <div>
-                    <OcContextProvider preFetchedComponents={this.props.context.openComponents}>
+                    <OcContextProvider 
+                        preFetchedComponents={this.props.context.openComponents} 
+                        baseUrl='https://oc-registry.opentable.com/v2/'
+                        lang='en-GB'
+                        componentTagRenderer={buildOcTag}>
+
                         {this.props.something}
                         <div className={styles.test}>
                             <h1>Client rendered map JAMES:</h1>
                             {this.toggled('hideMap', 
-                                <Oc className={styles.map} name='ot-react-maps-oc' version='5.x.x' params={mapsParams} mountable={false} />)}
+                                <OpenComponent className={styles.map} name='ot-react-maps-oc' version='5.x.x' parameters={mapsParams} mountable={false} />)}
                             
                             <h1>Client rendered map (mountable):</h1>
                             {this.toggled('hideMap2', 
-                                <Oc className={styles.map} name='ot-react-maps-oc' version='5.x.x' params={mapsParams}
+                                <OpenComponent className={styles.map} name='ot-react-maps-oc' version='5.x.x' parameters={mapsParams}
                                 captureKey='map2' />)}
 
                             <h1>Server rendered footer (mountable):</h1>
                             {this.toggled('hideFooter1', 
-                                <Oc name='footer' version='1.x.x' params={{}} serverRenderKey='footer'
+                                <OpenComponent name='footer' version='1.x.x' parameters={{}} serverRenderKey='footer'
                                 captureKey='footer1' />)}
 
                             <h1>Server rendered footer (not-mountable):</h1>
                             {this.toggled('hideFooter2', 
-                                <Oc name='footer' version='1.x.x' params={{}} mountable={true} serverRenderKey='footer' />)}
+                                <OpenComponent name='footer' version='1.x.x' parameters={{}} mountable={true} serverRenderKey='footer' />)}
                         </div>
                     </OcContextProvider>
-                    <h1>Client rendered map (mountable):</h1>
-                    {this.toggled('hideMap2', 
-                        <Oc className={styles.map} name='ot-react-maps-oc' version='5.x.x' params={mapsParams}
-                        captureKey='map2' />)}
                 </div>
             </SeedContext.Provider>
         );

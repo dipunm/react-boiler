@@ -1,27 +1,12 @@
 const path = require('path');
-const { DefinePlugin, optimize, NormalModuleReplacementPlugin } = require('webpack');
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const configureCssModules = require('./.build/webpack/configureCssModules');
 const excludeNodeModules = require('./.build/webpack/excludeNodeModules');
 const setupDevServer = require('./.build/webpack/setupDevServer');
 const transpileJs = require('./.build/webpack/transpileJs');
+const removeServerLogic = require('./.build/webpack/removeServerLogic')
 
-const removeServerLogic = (config) => {
-  config.plugins = config.plugins || [];
-  config.plugins.push(new DefinePlugin({
-    'process.env.IS_BROWSER': JSON.stringify(true)
-  }));
-
-  config.plugins.push(new NormalModuleReplacementPlugin(
-    /\.\.\/server/, (resource) => {
-      const requestFromAppFolder = path.relative(path.resolve(__dirname, 'src/app'), resource.context).substring(0,2) !== '..';
-      if (requestFromAppFolder) {
-        resource.request = path.resolve(__dirname, '.build/webpack/noop.js');
-      }
-    }),
-    new NormalModuleReplacementPlugin(/src\/server\.start/, path.resolve(__dirname, '.build/webpack/noop.js'))
-  );
-}
 
 module.exports = async function (env = {}) {
 
@@ -29,21 +14,27 @@ module.exports = async function (env = {}) {
     entry: './src/index.js',
     devtool: 'source-map',
     target: 'web',
+    mode: env.production ? 'production' : 'development',
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'dist/client'),
       filename: 'application.js',
       publicPath: '/assets/',
     }
   };
 
-  // run this if working on a nodejs build.
-  // excludeNodeModules(config);
   transpileJs(config);
-  configureCssModules(config);
+  const styleLoaders = env.production ? 
+    [ MiniCssExtractPlugin.loader ] : 
+    [ 'style-loader' ];
+
+  const stylePlugins = env.production ? 
+    [ new MiniCssExtractPlugin() ] : 
+    [];
+
+  configureCssModules(config, styleLoaders, stylePlugins);
   removeServerLogic(config);
-  
-  if (env.NODE_ENV === 'local') {
-    config.mode = 'development';
+
+  if (env.liveserver) {
     await setupDevServer(config);
   } 
 

@@ -14,10 +14,10 @@ export const initClient = async () => {
     const unescape = txt => txt.replace(/\[>\/\]/g, '</')
 
     const json = document.getElementById('server-state').innerText;
-    const capturedVm = JSON.parse(unescape(json));
+    const stateModel = JSON.parse(unescape(json));
 
     const locals = {};
-    const context = createContext(capturedVm, locals);
+    const context = createContext(stateModel, locals);
     const req = createRequestOnClient();
     await buildPageModel(context, req, locals);
     

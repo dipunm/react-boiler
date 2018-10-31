@@ -7,9 +7,14 @@ export class OcContextProvider extends React.Component {
     
         const captures = {};
         const markups = {...props.preFetchedComponents};
+        const baseUrl = props.baseUrl;
+        const lang = props.lang;
+
         this.state = {
             markups,
-            captures
+            captures,
+            baseUrl,
+            lang
         };
     }
     saveContainer(key, container) {

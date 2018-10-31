@@ -34,7 +34,14 @@ export function ocFallback(err) {
     console.error(err);
     return {
         renderComponents: (comps, opts, cb) => {
-            cb(null, comps.map(({name}) => `Unable to fetch component: ${name}, ${JSON.stringify(opts)}`));
+            cb(null, comps.map(({name}) => {
+                const options = {
+                    name,
+                    version: componentsToPreWarm[name],
+                    ...opts
+                }
+                return options
+            }));
         }
     }
 }

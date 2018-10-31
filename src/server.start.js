@@ -2,7 +2,7 @@ import express from 'express';
 import React from 'react';
 import { renderToNodeStream } from 'react-dom/server';
 
-import buildTemplate from './server.template';
+import buildTemplate from './server/templates/main';
 import App from './app/App';
 import { buildPageModel } from './app/routes/buildPageModel';
 import { createContext } from './app/context/createContext';
@@ -13,10 +13,19 @@ import { listen } from './server/express/listen';
 export const setupPages = (app, allowedRoutes) => {
     app.get(allowedRoutes, (req, res, next) => (async () => {
         const context = createContext(req, res);
-        await buildPageModel(context, createRequestOnServer(req), res.locals);
+        const props = await buildPageModel(context, createRequestOnServer(req));
 
-        const reactApp = renderToNodeStream(<App {...res.locals} context={context} />)
-        const stream = buildTemplate(context, {reactApp, model: res.locals});
+        if (req.xhr) {
+            res.json(context.stateModel).end();
+            return;
+        }
+
+        const reactApp = renderToNodeStream(<App {...props} context={context} />)
+        const stream = buildTemplate(context, {
+            reactApp, 
+            props, 
+            cachedState: context.stateModel
+        });
 
         res.contentType('html');
         stream.pipe(res, {end: false});

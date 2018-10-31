@@ -9,7 +9,7 @@ module.exports = (api) => {
     const plugins = [
         "react-hot-loader/babel",
         ["css-modules-transform", {
-            generateScopedName: "[hash:base64:3][name]__[local]"
+            generateScopedName: "a[hash:base32:4]•[local]"
         }],
     ];
 

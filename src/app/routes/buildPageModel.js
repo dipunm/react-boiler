@@ -1,11 +1,10 @@
 import * as home from './home';
 
 const determineRoute = () => 'home';
-export async function buildPageModel(context, req, locals) {
+export async function buildPageModel(context, req) {
     const route = determineRoute(req);
 
     if (route === 'home') {
-        await home.setModels(context, req, locals);
-        return locals;
+        return await home.setModels(context, req);
     }
 }

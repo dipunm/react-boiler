@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { buildUrl, dangerousHtml, shallowCompare } from '../lib';
+import { dangerousHtml, shallowCompare } from './utils';
 import { OcContextConsumer } from './OcContext';
-import { renderComponentOnClient } from '../renderComponentOnClient';
+import { renderComponentOnClient } from './renderComponentOnClient';
+import { buildOcTag } from '../buildOcTag';
 
-class OpenComponent extends React.Component {
+class Oc extends React.Component {
   constructor(props) {
     super(props);
     this.ref = React.createRef();
@@ -51,17 +52,17 @@ class OpenComponent extends React.Component {
   }
 
   render() {
-    const { id, serverHtml, name, version, params, className } = this.props;
+    const { id, serverHtml, name, version, parameters, className, baseUrl, lang } = this.props;
 
     const html = this.showServerMarkup && typeof serverHtml === 'string' ?
       `<oc-component data-rendered="true">${serverHtml}</oc-component>` :
-      `<oc-component href="${buildUrl(name, version, params)}" data-name="${name}" data-rendered="false"></oc-component>`;
+      buildOcTag({...(serverHtml || {}), name, baseUrl, version, parameters, lang});
 
     return <div ref={this.ref} id={id} className={className} dangerouslySetInnerHTML={dangerousHtml(html)} suppressHydrationWarning={true} />
   }
 }
 
-export const Oc = (props) => (
+export const OpenComponent = (props) => (
   <OcContextConsumer>{
     (ocContext) => {
       console.log('ocContext', ocContext);
@@ -73,16 +74,20 @@ export const Oc = (props) => (
         );
       }
 
-      const serverHtml = ocContext ? ocContext.markups[serverRenderKey || captureKey] : undefined;
-      const container = ocContext && captureKey ? ocContext.captures[captureKey] : undefined
-      const saveContainer = ocContext && captureKey ? 
+      const serverHtml = ocContext.markups[serverRenderKey || captureKey];
+      const container = captureKey ? ocContext.captures[captureKey] : undefined;
+      const saveContainer = captureKey ? 
         (container) => ocContext.saveContainer(captureKey, container): 
-        undefined
-
-      return <OpenComponent {...props} 
+        undefined;
+      const baseUrl = ocContext.baseUrl;
+      const lang = ocContext.lang;
+      
+      return <Oc {...props} 
         serverHtml={serverHtml}
         container={container}
         saveContainer={saveContainer}
+        baseUrl={baseUrl}
+        lang={lang}
       />;
     }
   }</OcContextConsumer>

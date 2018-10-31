@@ -5,11 +5,11 @@ const escape = txt => txt.replace(/<\//g, '[>/]')
  * This file should export a stream-template. This enables us to
  * inject streams and promises into our template.
  */
-export default (_context, {model, reactApp}) =>
+export default (_context, {cachedState, props, reactApp}) =>
 T`<!DOCTYPE html>
 <html>
     <head>
-        <title>${model.title}</title>
+        <title>${props.title}</title>
         <script>window.OT = window.OT || {};
 window.OT.SRS = {
   abTestingAnalytics: {"account":"2d65a94551a4a1caddd5a825a88698a89e19f2d5","hostname":"ac.opentable.com"},
@@ -39,7 +39,7 @@ OT.Events.fire = function () {}
     <body>
         <div id="application">${reactApp}</div>
         <script id="server-state"
-            type="model/x.page-state+json">${escape(JSON.stringify(model))}</script>
+            type="model/x.page-state+json">${escape(JSON.stringify(cachedState))}</script>
         <script type="text/javascript" src="/assets/application.js"></script>
     </body>
 </html>`;
