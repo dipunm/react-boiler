@@ -10,7 +10,10 @@ import { createRequestOnServer } from './server/bootstrapping/createRequestOnSer
 import { setupMiddleware } from './server/express/setup';
 import { listen } from './server/express/listen';
 
-export const setupPages = (app, allowedRoutes) => {
+export const setupPages = async (app, allowedRoutes) => {
+
+    await setupMiddleware(app);
+
     app.get(allowedRoutes, (req, res, next) => (async () => {
         const context = createContext(req, res);
         const props = await buildPageModel(context, createRequestOnServer(req));
@@ -22,8 +25,8 @@ export const setupPages = (app, allowedRoutes) => {
 
         const reactApp = renderToNodeStream(<App {...props} context={context} />)
         const stream = buildTemplate(context, {
-            reactApp, 
-            props, 
+            reactApp,
+            props,
             cachedState: context.stateModel
         });
 
@@ -37,7 +40,6 @@ export const setupPages = (app, allowedRoutes) => {
 
 export const startExpressServer = () => (async () => {
     const app = express();
-    await setupMiddleware(app);
     await setupPages(app, '*');
     await listen(app)
 }).catch(console.log);

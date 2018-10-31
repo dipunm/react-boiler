@@ -7,24 +7,22 @@ module.exports = async (config) => {
   const warmRequire = require('warm-require').watch({
     paths: path.join(__dirname, '../../' ,'src')
   });
-  
-  
+
+
   // to support webpack-dev-server:
   // assets folder is excluded. (to allow serving from /assets/*)
   // any file with an extension is excluded. (to prevent blocking hot-module-reloading json file)
   const safeRoutes = /^(?!\/assets\/)(?!.*\.\w+([?#].*)?$).*/
-  
+
   let dynamicApp;
-  
+
   config.devServer = {
     contentBase: path.join(__dirname, 'dist'),
     before: async (app) => {
       require('@babel/register');
       console.log('starting express app...')
-      const { setupMiddleware } = warmRequire(path.join(__dirname, '../../src/server/express/setup'));
       const { setupPages } = warmRequire(path.join(__dirname, '../../src/server.start'));
       const sub = require('express')();
-      await setupMiddleware(sub)
       await setupPages(sub, safeRoutes)
       dynamicApp = dynamic.create(sub);
       app.use(dynamicApp.handler());
@@ -36,16 +34,14 @@ module.exports = async (config) => {
     if (dynamicApp) {
       Object.keys(require.cache).forEach((require_path) => {
         const inSrcFolder = path.relative(path.resolve(__dirname, '../../src'), require_path).substring(0,2) !== '..';
-      
+
         if (inSrcFolder) {
           delete require.cache[require_path]
         }
       });
 
       const sub = require('express')();
-      const { setupMiddleware } = warmRequire(path.join(__dirname, '../../src/server/express/setup'));
       const { setupPages } = warmRequire(path.join(__dirname, '../../src/server.start'));
-      await setupMiddleware(sub)
       await setupPages(sub, safeRoutes)
       dynamicApp.replace(sub);
       console.log('Server dependencies reloaded.');
