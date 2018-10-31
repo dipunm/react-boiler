@@ -6,36 +6,10 @@
     "configurations": [
         {
             "type": "node",
-            "request": "attach",
-            "name": "Attach",
-            "port": 1234,
-            "cwd": "${workspaceFolder}",
-            "skipFiles": [
-                "node_modules/**/*"
-            ],
-            "sourceMaps": true
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Nodemon",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/nodemon",
-            "args": [
-                "--exec", "BABEL_ENV=node babel-node"
-            ],
-            "program": "${workspaceFolder}/src/server/index.js",
-            "restart": true,
-            "console": "internalConsole",
-            "internalConsoleOptions": "neverOpen",
-            "sourceMaps": true,
-            "cwd": "${workspaceFolder}",
-        },
-        {
-            "type": "node",
             "request": "launch",
             "name": "Webpack",
             "args": [
-                "--env.NODE_ENV=local", "--hot"
+                "--env.liveserver=true", "--hot"
             ],
             "autoAttachChildProcesses": true,
             "stopOnEntry": true,
