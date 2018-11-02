@@ -3,10 +3,12 @@ const debounce = require('debounce');
 const chokidar = require('chokidar')
 const dynamic = require('dynamic-middleware');
 
-module.exports = async (config) => {
+module.exports = async (config, options = {}) => {
   const warmRequire = require('warm-require').watch({
     paths: path.join(__dirname, '../../' ,'src')
   });
+
+  const registerRequireHooks = options.registerRequireHooks || (() => {});
 
 
   // to support webpack-dev-server:
@@ -17,9 +19,9 @@ module.exports = async (config) => {
   let dynamicApp;
 
   config.devServer = {
-    contentBase: path.join(__dirname, 'dist'),
+    contentBase: path.join(__dirname, 'dev'),
     before: async (app) => {
-      require('@babel/register');
+      registerRequireHooks();
       console.log('starting express app...')
       const { setupPages } = warmRequire(path.join(__dirname, '../../src/server.start'));
       const sub = require('express')();

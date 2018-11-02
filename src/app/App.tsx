@@ -1,11 +1,10 @@
-import React from 'react';
+import React = require('react');
 import { hot } from 'react-hot-loader'
 
 import { OpenComponent } from './openComponents/components/Oc';
 import { OcContextProvider } from './openComponents/components/OcContext';
-import { buildOcTag } from './openComponents/buildOcTag';
 import { SeedContext } from './context/SeedContext';
-import styles from './App.css'
+import styles = require('./App.css');
 import './App.css'
 
 const mapsParams = {
@@ -20,7 +19,12 @@ const mapsParams = {
     __oc_Retry: 0,
 }
 
-class App extends React.Component {
+declare type AppProps = {
+    context: any,
+    something?: string
+}
+
+class App extends React.Component<AppProps> {
     constructor(props) {
         super(props);
         this.state = {};
@@ -49,12 +53,11 @@ class App extends React.Component {
                     <OcContextProvider
                         preFetchedComponents={this.props.context.openComponents}
                         baseUrl='https://oc-registry.opentable.com/v2'
-                        lang='en-GB'
-                        componentTagRenderer={buildOcTag}>
+                        lang='en-GB'>
 
                         {this.props.something}
                         <div className={styles.test}>
-                            <h1>Client rendered map JAMES:</h1>
+                            <h1>Client rendered map FUN2:</h1>
                             {this.toggled('hideMap',
                                 <OpenComponent className={styles.map} name='ot-react-maps-oc' version='5.x.x' parameters={mapsParams} mountable={false} />)}
 

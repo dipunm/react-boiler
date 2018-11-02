@@ -1,4 +1,4 @@
-import helmet from 'helmet';
+import helmet = require('helmet');
 
 export default (app) => {
     app.use(helmet(

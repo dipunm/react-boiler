@@ -1,5 +1,6 @@
 export const renderComponentOnClient = ({component, saveContainer}) => {
-    window.oc.renderNestedComponent($(component), () => {
+    const oc = (window as any).oc;
+    oc.renderNestedComponent($(component), () => {
         if (saveContainer) {
             saveContainer(component);
         }

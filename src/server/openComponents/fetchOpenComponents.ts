@@ -1,6 +1,6 @@
 import { getOcClient, ocFallback } from './getOcClient'
 export const fetchOpenComponents = async (components) => {
-    const oc = await getOcClient().catch(ocFallback);
+    const oc = (await getOcClient().catch(ocFallback))!;
     const options = {
         headers: {
             'accept-language': 'en-US'
@@ -11,7 +11,7 @@ export const fetchOpenComponents = async (components) => {
         }
     };
 
-    return new Promise((resolve, reject) => 
+    return new Promise((resolve, reject) =>
         oc.renderComponents(
             components,
             options,

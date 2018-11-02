@@ -1,7 +1,25 @@
-import React from 'react';
-const Context = React.createContext(false);
+import React = require('react');
 
-export class OcContextProvider extends React.Component {
+declare type Props = {
+    preFetchedComponents: object,
+    baseUrl: string,
+    lang: string,
+}
+
+declare type State = {
+    markups: object,
+    captures: object,
+    baseUrl: string,
+    lang: string
+}
+
+export declare type OCContextType = State & {
+    saveContainer: (key: string, container: HTMLElement) => void
+}
+
+const Context = React.createContext<boolean | OCContextType>(false);
+
+export class OcContextProvider extends React.Component<Props, State> {
     constructor(props) {
         super(props);
 

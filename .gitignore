@@ -1,3 +1,5 @@
+.awcache
 node_modules
 .DS_Config
 dist
+*.css.d.ts

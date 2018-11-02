@@ -3,16 +3,16 @@
  * ### file1.css ###
  * body { background-color: red; }
  * @import('file2.css');
- * 
+ *
  * ### file2.css ###
  * h1 {color: white};
- * 
+ *
  * ### output:
  * body { background-color: red; }
  * h1 {color: white};
- * 
+ *
  * style-loader:
- * 
+ *
  */
 module.exports = (config, styleLoaders = [], stylePlugins = []) => {
   config.module = config.module || {};
@@ -21,12 +21,14 @@ module.exports = (config, styleLoaders = [], stylePlugins = []) => {
 
   const cssConfig = {
     test: /\.css$/, use: [
-      ...styleLoaders, 
+      ...styleLoaders,
       {
-        loader: "css-loader", 
+        loader: "typings-for-css-modules-loader",
         options: {
           modules: true,
-          localIdentName: 'a[hash:base32:4]•[local]'
+          localIdentName: 'a[hash:base32:4]•[local]',
+          camelCase: 'dashesOnly',
+          namedExport: true
         }
       }
     ]

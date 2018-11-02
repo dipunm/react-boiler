@@ -1,6 +1,6 @@
 import * as home from './home';
 
-const determineRoute = () => 'home';
+const determineRoute = (_) => 'home';
 export async function buildPageModel(context, req) {
     const route = determineRoute(req);
 

@@ -1,6 +1,6 @@
-import colors from 'colors/safe';
-import portfinder from 'portfinder';
-import Promise from 'bluebird';
+import colors = require('colors/safe');
+import portfinder = require('portfinder');
+import Promise = require('bluebird');
 
 export async function listen(app) {
     portfinder.basePort = 3000;

@@ -1,11 +1,11 @@
-import T from 'stream-template';
+import T = require('stream-template');
 const escape = txt => txt.replace(/<\//g, '[>/]')
 
 /***
  * This file should export a stream-template. This enables us to
  * inject streams and promises into our template.
  */
-export default (_context, {cachedState, props, reactApp}) =>
+export const buildTemplate = (_context, {cachedState, props, reactApp}) =>
 T`<!DOCTYPE html>
 <html>
     <head>

@@ -3,9 +3,11 @@ import { createContextOnServer } from '../../server/bootstrapping/createContextO
 
 export const createContext = (...args) => {
     if (process.env.IS_BROWSER) {
-        return createContextOnClient(...args);
+        const [stateModel] = args;
+        return createContextOnClient(stateModel);
     } else {
-        return createContextOnServer(...args);
+        const [req, res] = args;
+        return createContextOnServer(req, res);
     }
 
 }

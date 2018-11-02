@@ -1,8 +1,9 @@
-import qs from 'query-string'
+import qs = require('query-string');
 
 export const buildOcTag = ({name, baseUrl, version, parameters, lang}) => {
     if (process.env.IS_BROWSER) {
-        return window.oc.build({name, baseUrl, version, parameters})
+        const oc = (window as any).oc;
+        return oc.build({name, baseUrl, version, parameters})
     } else {
         const href = `${baseUrl}/${name}/${version}?${qs.stringify({
             ...parameters,

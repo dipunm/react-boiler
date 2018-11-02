@@ -1,10 +1,10 @@
-import Promise from 'bluebird';
-import OcClient from 'ot-oc-client';
+import Promise = require('bluebird');
+import OcClient = require('ot-oc-client');
 import { getDiscovery } from '../discovery';
 import componentsToPreWarm from './componentsToPreWarm';
 
 
-let instance = null;
+let instance:null|Promise<OcClient> = null;
 export async function getOcClient() {
     if (instance === null) {
 

@@ -1,6 +1,7 @@
-import Discovery from 'ot-discovery';
+import Promise = require('bluebird');
+import Discovery = require('ot-discovery');
 
-let instance = null;
+let instance:null|Promise<Discovery> = null;
 function startDiscovery() {
     if (instance === null) {
         instance = new Promise((resolve, reject) => {

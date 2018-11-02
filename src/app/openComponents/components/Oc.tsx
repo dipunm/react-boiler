@@ -1,11 +1,32 @@
-import React from 'react';
+import React = require('react');
 
 import { dangerousHtml, shallowCompare } from './utils';
-import { OcContextConsumer } from './OcContext';
+import { OcContextConsumer, OCContextType } from './OcContext';
 import { renderComponentOnClient } from './renderComponentOnClient';
 import { buildOcTag } from '../buildOcTag';
 
-class Oc extends React.Component {
+declare type Props = {
+  id: string,
+  className: string,
+  serverHtml: object,
+  baseUrl: string,
+  lang: string,
+  name: string,
+  version: string | number,
+  parameters: object,
+  container?: HTMLElement,
+  saveContainer?: (container:HTMLElement) => void
+}
+//id, serverHtml, name, version, parameters, className, baseUrl, lang
+declare type State = {
+
+}
+
+
+class Oc extends React.Component<Props, State> {
+  ref: React.RefObject<HTMLDivElement>;
+  showServerMarkup: boolean;
+
   constructor(props) {
     super(props);
     this.ref = React.createRef();
@@ -21,13 +42,13 @@ class Oc extends React.Component {
     const old = {
       name: this.props.name,
       version: this.props.version,
-      params: this.props.params,
+      parameters: this.props.parameters,
     }
 
     const now = {
       name: newProps.name,
       version: newProps.version,
-      params: newProps.params,
+      parameters: newProps.parameters,
     }
 
     if (!shallowCompare(old, now)) {
@@ -41,12 +62,13 @@ class Oc extends React.Component {
 
   componentDidMount() {
     const {container, saveContainer} = this.props;
+    const element = this.ref.current!;
 
     if (container) {
-      this.ref.current.innerHTML = '';
-      this.ref.current.appendChild(container);
+      element.innerHTML = '';
+      element.appendChild(container);
     } else {
-      const component = this.ref.current.getElementsByTagName("oc-component")[0];
+      const component = element.getElementsByTagName("oc-component")[0];
       renderComponentOnClient({component, saveContainer});
     }
   }
@@ -64,7 +86,7 @@ class Oc extends React.Component {
 
 export const OpenComponent = (props) => (
   <OcContextConsumer>{
-    (ocContext) => {
+    (ocContext: OCContextType) => {
       const { serverRenderKey, captureKey } = props;
       if (!ocContext && captureKey) {
         console.warn(
