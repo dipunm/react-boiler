@@ -3,8 +3,9 @@ module.exports = (api) => {
     const envConfig = {};
     const other = {};
     const presets = [
-        ["@babel/preset-env", envConfig],
+        ["@babel/env", envConfig],
         "@babel/react",
+        "@babel/flow",
     ];
     const plugins = [
         "react-hot-loader/babel",
