@@ -19,16 +19,17 @@ module.exports = async function (env = {}) {
       path: path.resolve(__dirname, 'dist/client'),
       filename: 'application.js',
       publicPath: '/assets/',
+      chunkFilename: 'chunk.[name].js',
     }
   };
 
   transpileJs(config);
-  const styleLoaders = env.production ? 
-    [ MiniCssExtractPlugin.loader ] : 
+  const styleLoaders = env.production ?
+    [ MiniCssExtractPlugin.loader ] :
     [ 'style-loader' ];
 
-  const stylePlugins = env.production ? 
-    [ new MiniCssExtractPlugin() ] : 
+  const stylePlugins = env.production ?
+    [ new MiniCssExtractPlugin() ] :
     [];
 
   configureCssModules(config, styleLoaders, stylePlugins);
@@ -36,7 +37,7 @@ module.exports = async function (env = {}) {
 
   if (env.liveserver) {
     await setupDevServer(config);
-  } 
+  }
 
   return config;
 }

@@ -1,5 +1,9 @@
 import T from 'stream-template';
-const escape = txt => txt.replace(/<\//g, '[>/]')
+
+// javascript considers '\/' === '/', but HTML may eagerly
+// close script tags if we don't escape '/' characters.
+// see: https://www.w3.org/TR/html4/appendix/notes.html#h-B.3.2
+const scriptEscape = txt => txt.replace(/\//g, `\\/`)
 
 /***
  * This file should export a stream-template. This enables us to
@@ -39,7 +43,7 @@ OT.Events.fire = function () {}
     <body>
         <div id="application">${reactApp}</div>
         <script id="server-state"
-            type="model/x.page-state+json">${escape(JSON.stringify(cachedState))}</script>
+            type="model/x.page-state+json">${scriptEscape(JSON.stringify(cachedState))}</script>
         <script type="text/javascript" src="/assets/application.js"></script>
     </body>
 </html>`;

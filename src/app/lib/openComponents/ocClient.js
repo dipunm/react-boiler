@@ -1,4 +1,4 @@
-import { fetchOpenComponents } from "../../server/openComponents/fetchOpenComponents";
+import { fetchOpenComponents } from "../../../server/openComponents/fetchOpenComponents";
 
 export const prefetchOpenComponents = async (context, components) => {
     if (process.env.IS_BROWSER) {

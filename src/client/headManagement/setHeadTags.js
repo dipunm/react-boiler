@@ -1,3 +1,3 @@
-export const setHeadTags = (locals) => {
-    document.title = locals.title;
+export const setHeadTags = (pageModel) => {
+    document.title = pageModel.title;
 }
